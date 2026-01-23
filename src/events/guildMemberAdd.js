@@ -39,7 +39,8 @@ const getWelcomeMessageWithMeme = async (userId) => {
     TODO: Change this function to return different welcome message with a meme everytime a new user joins.
   */
   const meme = await getWelcomeMeme();
-
+  // TODO: MOZZARTS, if you need to change the message you can! 
+  // This is what I put and you all can and should change it to have fun with it!
   return {
     content: `Welcome ${userMention(userId)},
     This is Will's deployment server. The alpha watches over you all.`,
