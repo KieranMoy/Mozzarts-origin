@@ -5,6 +5,7 @@
   "gameplay": [
     "You will listen to a 5 second clip of a song",
     "You have 4 multiple choice options to choose from",
-    "You are awarded points for guessing right"
+    "You are awarded points for guessing right", 
+    "Based on the difficulty you choose, there will be points deducted"
   ]
 }

@@ -8,8 +8,8 @@ export default {
         .setName("rules")
         .setDescription("Music trivia rules!")
     ,
-    
     async execute(interaction) {
+        // Gets the rules from the helper 
         const rules = getRules();
 
         const embed = new EmbedBuilder()
@@ -20,7 +20,7 @@ export default {
             { name: 'Difficulties:', value: rules.difficulties.map(g =>`- ${g}`).join('\n'), inline: true },
             { name: 'How to Play', value: rules.gameplay.map(g => `- ${g}`).join('\n') }
         )
-        .setFooter({ text: 'Good luck, maestro!' });
+        .setFooter({ text: "May you have PLUCK!" });
 
         //Ephemeral allows for only the user that requested the rules to see it
         await interaction.reply({
