@@ -1,5 +1,6 @@
 import { createResultEmbed, getTriviaQuestion, createTriviaQuestion } from "../helpers/trivia.js";
 import { triviaQuestions } from "../data/triviaQuestions.js";
+import { ActionRowBuilder, ButtonBuilder } from "discord.js";
 
 export default {
   name: "interactionCreate",
@@ -83,13 +84,14 @@ export default {
           });
 
           // Disable the buttons after answering
-          const disabledRow = interaction.message.components[0];
-          disabledRow.components.forEach((button) => {
-            button.setDisabled(true);
-          });
-
-          await interaction.message.edit({ components: [disabledRow] });
         }
+           const disabledRow = new ActionRowBuilder().addComponents(
+             interaction.message.components[0].components.map((button) =>
+               new ButtonBuilder(button.data).setDisabled(true)
+             )
+           );
+
+           await interaction.message.edit({ components: [disabledRow] });
       } catch (err) {
         console.error(err);
         await interaction.reply({
