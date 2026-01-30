@@ -271,7 +271,7 @@ export default {
     let tempFile = null;
 
     try {
-      await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+      await interaction.deferReply({ ephemeral: true });
 
       const vc = findVoiceChannel(guild);
       if (!vc) throw new Error(`Missing voice channel "${VOICE_CHANNEL_NAME}"`);
