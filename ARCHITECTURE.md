@@ -19,3 +19,9 @@ In Figure 1.1 below, it shows the activities our bot goes through when going thr
 
 
 
+## **Network Diagram (Khoa Vo):**
+Figure 1.2 shows the connections and nodes for the network of the bot.
+
+<ins> **Figure 1.2** </ins>
+
+https://raw.githubusercontent.com/CSS360-2026-Winter/Mozzarts/refs/heads/main/images/khoa-network-diagram.png
