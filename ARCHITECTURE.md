@@ -1,7 +1,11 @@
 # Architecture of our bot
 
 
-## **Data-flow diagram (David):**
+## **Data-flow diagram (David Hochberg):**
+Figure 1.0 shows the data and information that will flow between the different elements of our bot.
+
+<ins> **Figure 1.0** </ins>
+
 <img width="1345" height="1133" alt="david-data-flow-diagram" src="https://github.com/user-attachments/assets/48357a76-fdbd-4e54-9b1a-a92f269c9aa3" />
 
 ## **Activity Diagram (Will Sarmiento):** 
