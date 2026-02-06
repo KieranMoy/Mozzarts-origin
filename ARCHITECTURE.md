@@ -8,13 +8,18 @@ Figure 1.0 shows the data and information that will flow between the different e
 
 <img width="1345" height="1133" alt="david-data-flow-diagram" src="https://github.com/user-attachments/assets/48357a76-fdbd-4e54-9b1a-a92f269c9aa3" />
 
-## **Activity Diagram (Will Sarmiento):** 
-In Figure 1.1 below, it shows the activities our bot goes through when going through a single gameplay loop. This flow of activity is what we hopeto achieve by the end of development.
+## **Activity Diagram(Will Sarmiento): The gameplay loop**
+Description:
+
+The activity diagram shows the flow of activity that are done to play the music trivia. Once /trivia is run, this prompts the user to select a difficulty which if none are chosen, a message to remind the user will be given so that they may choose a difficulty, depending on the choice the instructions given will be different however they will still be instructions which the user will follow to maximize the points they can gain. 
+In Figure 1.1 below, it shows the activities our bot goes through when going through a single gameplay loop. This flow of activity is what we hope to achieve by the end of development.
 
 <ins> **Figure 1.1** </ins>
 
 <img src="/images/will-activity-diagram.png" alt="This is the activity diagram for Mozzarts bot" width="900" />
 
+Architecture importance: 
+This diagram is necessary for a clear view of how the music trivia game will run. 
 
 
 
