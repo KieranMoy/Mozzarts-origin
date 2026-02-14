@@ -32,7 +32,7 @@ Figure 1.2 shows the connections and nodes for the network of the bot.
 https://raw.githubusercontent.com/CSS360-2026-Winter/Mozzarts/refs/heads/main/images/khoa-network-diagram.png
 
 
-## **Use-case Diagram: ** 
+## **Use-case Diagram: (Kieran Moynihan)** 
 In Figure 1.3 below, it shows the fundamental blue print of our system and how each actor interacts with it.
 
 <ins> **Figure 1.3** </ins>
