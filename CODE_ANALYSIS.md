@@ -45,3 +45,39 @@ Next, we have outdated debt which we can see due to outdated functions that are 
 Lastly for the technical debt is code debt, a merge conflict with the [getScore.js](src/commands/getScore.js) and [score.js](src/commands/score.js) and [scoreStore.js](src/helpers/scoreStore.js) led to undetermined and lacking review which has led to a broken unfixed score tracker and rewarding system.
 
 As for code smells, our bot has is a large class in which can be further broken down to be better, as well as import "mayhem" withh so many imports that maintaining the class would be hard mainly due to it using so many which is attributed to the large class. [trivia.js](src/commands/trivia.js)
+
+## Threat Model Analysis (Kieran Moynihan)
+
+For this task, I built a threat model to identify potential security risks and weaknesses in our Discord bot. Since the bot accepts input directly from Discord users through slash commands and interaction events, it is important to consider how malicious or unexpected input could affect the bot’s stability, integrity, and functionality.
+
+### Assets to Protect
+The primary assets that need protection include:
+- Bot uptime and stability
+- Score tracking and game state data
+- Discord server integrity
+- Bot configuration and authentication credentials
+
+If any of these assets are compromised, the bot could crash, behave incorrectly, or provide inaccurate game results.
+
+### Threat Actors
+The most likely threat actors are Discord users, including those who may intentionally try to break the bot by providing invalid input, spamming commands, or triggering unexpected behavior. Because the bot is publicly accessible within the server, any user has the ability to interact with it and potentially exploit weaknesses.
+
+### Attack Surfaces
+The main attack surface is user input through slash commands and interaction events. Since users control the input, they may provide malformed, unexpected, or extreme values that the bot does not properly handle. This could result in crashes, undefined behavior, or corrupted game state.
+
+Another attack surface is the bot’s dynamic loading of commands and event files. If file handling is not carefully controlled, it increases the risk of loading unintended or invalid code.
+
+### Identified Threats
+The following threats were identified during this analysis:
+
+- Malformed or unexpected user input causing crashes or incorrect behavior
+- Command spam causing performance degradation or denial of service
+- Improper input validation allowing corruption of score or game state data
+- Unhandled exceptions causing the bot to crash or stop responding
+
+These threats primarily target the bot’s stability and reliability.
+
+### Mitigations
+To reduce these risks, the bot should implement stronger input validation and error handling. Using try/catch blocks around command execution would prevent crashes from unexpected input. Additionally, implementing rate limiting would help prevent command spam and denial of service scenarios. Improving validation and error handling would make the bot more resilient and easier to maintain.
+
+Overall, this threat model identified several potential vulnerabilities related to user input and command handling. Addressing these risks would improve the bot’s reliability, stability, and security.
