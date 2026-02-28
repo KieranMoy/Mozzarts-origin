@@ -10,15 +10,27 @@ for (const file of files) {
   const imported = require(path.join(commandsPath, file));
   const command = imported.default ?? imported;
 
-  commands.push(command.data.toJSON());
+  if (command?.data) {
+    commands.push(command.data.toJSON());
+  }
 }
 
 const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
 
 (async () => {
-  await rest.put(
-    Routes.applicationCommands(process.env.CLIENT_ID),
-    { body: commands }
-  );
-  console.log("Slash commands registered");
+  try {
+    console.log("Registering guild slash commands...");
+
+    await rest.put(
+      Routes.applicationGuildCommands(
+        process.env.CLIENT_ID,
+        process.env.GUILD_ID
+      ),
+      { body: commands }
+    );
+
+    console.log("Slash commands registered (guild).");
+  } catch (error) {
+    console.error("Error registering commands:", error);
+  }
 })();
