@@ -160,6 +160,13 @@ npm i -D @discordjs/rest discord-api-types
 - Removed outdated functions and files
 
 ```
+### Khoa Vo Changes:
+```
+- Created a powerup file and added the first powerup to freeze time
+- Added a visual timer to display the time remaining
+- Created the replay button to replay the song
+
+```
 
 
 
