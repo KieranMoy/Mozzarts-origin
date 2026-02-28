@@ -4,7 +4,13 @@ import { getUserPoints, getUserAllTimePoints } from "../helpers/scoreStore.js";
 export default {
   data: new SlashCommandBuilder()
     .setName("score")
-    .setDescription("Shows your current score"),
+    .setDescription("Shows a player's current score")
+    .addUserOption(option =>
+      option
+        .setName("user")
+        .setDescription("Select a user (optional)")
+        .setRequired(false)
+    ),
 
   async execute(interaction) {
     if (!interaction.guild) {
@@ -14,16 +20,15 @@ export default {
       });
     }
 
-    // Get user info
     const guildId = interaction.guild.id;
-    const userId = interaction.user.id;
+    const targetUser =
+      interaction.options.getUser("user") || interaction.user;
 
-    // Get stats for that user
-    const score = getUserPoints(guildId, userId);
-    const allTimeScore = getUserAllTimePoints(guildId, userId);
+    const score = getUserPoints(guildId, targetUser.id);
+    const allTimeScore = getUserAllTimePoints(guildId, targetUser.id);
 
     await interaction.reply({
-      content: `Your scores:\nCurrent score: ${score}\nLifetime score: ${allTimeScore}`,
+      content: `${targetUser.username}'s scores:\nCurrent score: ${score}\nLifetime score: ${allTimeScore}`,
       ephemeral: true,
     });
   },
