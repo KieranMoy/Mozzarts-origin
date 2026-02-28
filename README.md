@@ -167,6 +167,11 @@ npm i -D @discordjs/rest discord-api-types
 - Created the replay button to replay the song
 
 ```
+Version 2.0.4
+Kieran Moynihan Changes:
+- Added `/gameinfo` command to display active trivia session state (host, difficulty, round, channels).
+- Added `/activeplayers` command to display ranked players during an active trivia session.
+- Refactored `/score` to support user selection and correct guild-scoped score lookup.
 
 
 
