@@ -174,5 +174,15 @@ Kieran Moynihan Changes:
 - Refactored `/score` to support user selection and correct guild-scoped score lookup.
 
 
+# Version 2.1 Release Notes
+
+## Will Sarmiento
+ - Rules are more clear and detailed (#110 by @willnh7) 
+ - Hint point deduction (#116 by @willnh7)
+ - Randomizing the powerup rewarding, user can no longer get a powerup immediately (#88 by @willnh7)
+
+## Khoa's
+ - Skip preview (#114 by @khoav22)
+ - Less time to listen to replay based on difficulty (#109 by @khoav22)
 
 
