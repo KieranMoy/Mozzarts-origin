@@ -2,6 +2,9 @@
 // Previous versions had a more elaborate stage-based system; here we
 // just offer one hint per round, based on artist or title.
 
+import { arrayFill } from "ascii-table";
+import { CommandInteractionOptionResolver } from "discord.js";
+
 // `type` corresponds to the kind of question that was asked.  The
 // old implementation ignored both the difficulty and stage parameters and
 // always returned the same hint; this could be misleading when the question
@@ -10,7 +13,7 @@
 // exact field that was used in the question.  The third argument is kept for
 // backwards compatibility (tests, etc.) but we prefer the caller to pass
 // the type string directly.
-export function makeHint(track, type = "artist", difficulty = "easy") {
+export function makeHint(track, type = "artist") {
   // tracks coming from the iTunes API may lack some fields so we default to
   // "unknown" to avoid runtime errors.
   const artist = track.artistName || "unknown";
@@ -28,29 +31,40 @@ export function makeHint(track, type = "artist", difficulty = "easy") {
     }
   };
 
+  // The potential types of hint to give
+  const hintTypes = ["artist", "genre", "album", "title"];
+
+  // Based on the question type, remove that hint type so the hint doesn't give away the answer
   switch (type) {
     case "artist":
-      return `Artist starts with **${artist.charAt(0).toUpperCase()}**`;
+      hintTypes.splice(hintTypes.indexOf("artist"), 1);
+      break;
     case "genre":
-      return `Genre starts with **${genre.charAt(0).toUpperCase()}**`;
+      hintTypes.splice(hintTypes.indexOf("genre"), 1);
+      break;
     case "album":
-      return `Album starts with **${album.charAt(0).toUpperCase()}**`;
+      hintTypes.splice(hintTypes.indexOf("album"), 1);
+      break;
     case "title":
-      return `Title starts with **${title.charAt(0).toUpperCase()}**`;
-    case "year": {
-      const year = getYear();
-      if (year !== "unknown") {
-        // give first digit(s) so it's still somewhat of a clue
-        return `Year of release starts with **${year.charAt(0)}**`;
-      }
-      return `Year of release is **unknown**`;
-    }
+      hintTypes.splice(hintTypes.indexOf("title"), 1);
+      break;
+  }
+
+  // Randomly choose a hint type
+  let index = Math.floor(Math.random() * hintTypes.length);
+  let hintType = hintTypes[index];
+
+  // Return the proper hint based on the hint type
+  switch(hintType) {
+    case "artist":
+      return `This song's artist is **${artist}**`;
+    case "genre":
+      return `This song's genre is **${genre}**`;
+    case "album":
+      return `This song's album is **${album}**`;
+    case "title":
+      return `This song's title is **${title}**`;
     default:
-      // fall back to original implementation if caller passes something
-      // unexpected; this should only happen during tests or if we forgot
-      // to update a call site.
-      const artistChar = artist.charAt(0).toUpperCase();
-      const titleChar = title.charAt(0).toUpperCase();
-      return `Artist starts with **${artistChar}**, title starts with **${titleChar}**`;
+      return "Could not get a hint for this song."; // Error case, should never happen
   }
 }
