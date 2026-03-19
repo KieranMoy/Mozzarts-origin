@@ -37,3 +37,10 @@ export function terminateSession(guildId) {
   }
 }
 
+export function skipCurrentRound(guildId) {
+  const s = activeSessions.get(guildId);
+  if (s) {
+    s.skipRequested = true;
+    activeSessions.set(guildId, s);
+  }
+}

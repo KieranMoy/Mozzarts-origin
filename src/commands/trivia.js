@@ -347,6 +347,7 @@ function createGameSession(guild, difficulty, hostId, textChannelId, voiceChanne
   return {
     active: true,
     terminated: false,
+    skipRequested: false,
     guildId: guild.id,
     hostId,
     difficulty,
@@ -431,6 +432,14 @@ async function handlePreviewPhase(textChannel, player, tmpFile, guildId, difficu
   );
 
   const listenMsg = await textChannel.send({ embeds: [listenEmbed], components: [previewRow] });
+  
+  try {
+    const session = getSession(guildId);
+    if (session) {
+      session.roundMessageId = listenMsg.id;
+      setSession(guildId, session);
+    }
+  } catch {}
 
   // Set up preview skip collector
   const previewCollector = listenMsg.createMessageComponentCollector({
@@ -461,8 +470,13 @@ async function handlePreviewPhase(textChannel, player, tmpFile, guildId, difficu
       await listenMsg.edit({ components: [disabledRow] });
     } catch {}
 
-    // Check if game was terminated during preview
-    const session = getSession(guildId);
+        const session = getSession(guildId);
+
+    if (session?.skipRequested) {
+      await listenMsg.delete().catch(() => {});
+      return false;
+    }
+
     if (!session?.active || session?.terminated) {
       await safeUnlink(tmpFile);
       await listenMsg.delete().catch(() => {});
@@ -861,6 +875,7 @@ async function handleHintRequest(i, hintUsed, difficulty, track, question, round
  */
 async function finalizeRound(reason, question, winner, answerRow, controlRow, roundMsg, timerInterval, textChannel, doublePtsActive, hintUsed, difficulty, guildId, tmpFile, listenMsg, resolve) {
   const endSession = getSession(guildId);
+  const wasSkipped = Boolean(endSession?.skipRequested); 
 
   if (reason === "terminated" || !endSession?.active || endSession?.terminated) {
     clearInterval(timerInterval);
@@ -888,6 +903,40 @@ async function finalizeRound(reason, question, winner, answerRow, controlRow, ro
 
     try { await listenMsg.delete().catch(() => {}); } catch {}
 
+    resolve();
+    return;
+  }
+
+    if (reason === "skipped" || wasSkipped) {
+    clearInterval(timerInterval);
+
+    try {
+      const disabledAnswer = ActionRowBuilder.from(answerRow).setComponents(
+        answerRow.components.map((b) => ButtonBuilder.from(b).setDisabled(true))
+      );
+      const disabledCtrl = ActionRowBuilder.from(controlRow).setComponents(
+        controlRow.components.map((b) => ButtonBuilder.from(b).setDisabled(true))
+      );
+      await roundMsg.edit({ components: [disabledAnswer, disabledCtrl] }).catch(() => {});
+    } catch {}
+
+    await textChannel.send(`⏭️ **Round skipped by administrator.**\n✅ **Correct answer:** ${question.correctAnswer}`);
+
+    try {
+      const cleanupSession = getSession(guildId);
+      if (cleanupSession) {
+        cleanupSession.skipRequested = false;
+        if (cleanupSession.tmpFile) {
+          await safeUnlink(cleanupSession.tmpFile);
+          cleanupSession.tmpFile = null;
+        }
+        setSession(guildId, cleanupSession);
+      }
+    } catch {}
+
+    try { await listenMsg.delete().catch(() => {}); } catch {}
+
+    await sleep(3000);
     resolve();
     return;
   }
@@ -1025,6 +1074,15 @@ async function runGameRounds(guild, interaction, textChannel, voiceChannel, play
 
     // Handle preview phase
     const previewSuccess = await handlePreviewPhase(textChannel, player, tmpFile, guild.id, difficulty, genre, round);
+
+    const afterPreviewSession = getSession(guild.id);
+    if (afterPreviewSession?.skipRequested) {
+      await textChannel.send("⏭️ Round skipped. Moving to the next round...");
+      afterPreviewSession.skipRequested = false;
+      setSession(guild.id, afterPreviewSession);
+      continue;
+    }
+
     if (!previewSuccess) break;
 
     // Create and handle question
